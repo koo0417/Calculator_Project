@@ -6,10 +6,8 @@ int main (void)
 	double res[50];
 	double sto;//값 저장공간
 	char op;//연산기호
-
 	int ch;
 	int i;
-	printf("I am 도형\n");
 	ch = getchar();//수식입력
 	char op2 [100] = {"ch"};
 	char res2 [50] = {"ch2"};//연산자 저장공간
