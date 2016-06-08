@@ -3,6 +3,7 @@
 char num[10][50], dec[10][9];
 int i, d = -1;
 int order = 0;
+int or;
 void comma(int i, int d, int order){//콤마 찍는 함수
 	int k, x;
 	for(k = 0; k <= 49; k++){//정수 부분 콤마 찍는 방법
@@ -19,7 +20,7 @@ void comma(int i, int d, int order){//콤마 찍는 함수
 	}
 }
 void input(int order){//입력 함수
-	if(order % 2 == 0){
+	if(order % 2 == 0){//숫자를 받게 하는 부분
 		for(i = 0; i <= 50; i++){
 			scanf("%c", &num[order][i]);
 			if(num[order][i] == '.'){
@@ -34,7 +35,7 @@ void input(int order){//입력 함수
 				break;
 		}
 	}
-	else
+	else//연산자를 받게 하는 부분
 		scanf("%c ", &num[order][0]);
 }
 int main()
@@ -49,6 +50,28 @@ int main()
 			break;
 		}
 	}
+	for(or = 0; or <= order; or += 2){
+		switch(num[order][0]){
+			case '+':
+				addition(or);
+				break;
+			case '-':
+				subtraction(or);
+				break;
+			case '*':
+				multiple(or);
+				break;
+			case '/':
+				division(or);
+				break;
+			case '%':
+				remain(or);
+				break;
+			default :
+				break;
+		}
 	printf("= ");
+	comma(i, d, order);
 	return 0;
+}
 }
