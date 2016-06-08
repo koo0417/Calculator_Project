@@ -23,7 +23,7 @@ void input(int order){//입력 함수
 	if(order % 2 == 0){//숫자를 받게 하는 부분
 		for(i = 0; i <= 50; i++){
 			scanf("%c", &num[order][i]);
-			if(num[order][i] == '.'){
+			if(num[order][i] == '.'){//소수점이 있는지 없는지 확인
 				for(d = 0; d <= 9; d++){
 					scanf("%c", &dec[order][d]);
 					if(dec[order][d] == ' ' || dec[order][d] == '\n')
@@ -31,7 +31,7 @@ void input(int order){//입력 함수
 				}
 				break;
 			}
-			if(num[order][i] == ' ' || num[order][i] == '\n')
+			if(num[order][i] == ' ' || num[order][i] == '\n')//엔터 혹은 스페이스로 숫자 입력을 일시로 종료시킴
 				break;
 		}
 	}
@@ -50,8 +50,8 @@ int main()
 			break;
 		}
 	}
-	for(or = 0; or <= order; or += 2){
-		switch(num[order][0]){
+	for(or = 1; or <= order; or += 2){//입력된 연산자가 무엇인지 확인함
+		switch(num[or][0]){
 			case '+':
 				addition(or);
 				break;
@@ -70,8 +70,9 @@ int main()
 			default :
 				break;
 		}
+	}
 	printf("= ");
 	comma(i, d, order);
 	return 0;
-}
+
 }
