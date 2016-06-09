@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-char num[10][50], dec[10][9];
+char num[11][50], dec[11][9];
 int i, d = -1;
 int order = 0;
 int or;
-void comma(int i, int d, int order){//콤마 찍는 함수
+int r1, r2, r3;
+void comma(int i, int d, int order){//�� �� ��
 	int k, x;
-	for(k = 0; k <= 49; k++){//정수 부분 콤마 찍는 방법
+	for(k = 0; k <= 49; k++){//�� �� ��  ��
 		printf("%c", num[order][k]);
 		if((i - k) % 3 == 1 && k < i-2)
 			printf(",");
 	}
-	if(d > 0){//소수 부분 콤마 찍는 방법
+	if(d > 0){//�� �� �� ��
 		for(x = 0; x <= 8; x++){
 			printf("%c", dec[order][x]);
 			if(x % 3 == 2 && x < d-1)
@@ -19,11 +20,11 @@ void comma(int i, int d, int order){//콤마 찍는 함수
 		}
 	}
 }
-void input(int order){//입력 함수
-	if(order % 2 == 0){//숫자를 받게 하는 부분
+void input(int order){//�� ��
+	if(order % 2 == 0){//�� �� ��
 		for(i = 0; i <= 50; i++){
 			scanf("%c", &num[order][i]);
-			if(num[order][i] == '.'){//소수점이 있는지 없는지 확인
+			if(num[order][i] == '.'){//��� �� ��
 				for(d = 0; d <= 9; d++){
 					scanf("%c", &dec[order][d]);
 					if(dec[order][d] == ' ' || dec[order][d] == '\n')
@@ -31,18 +32,20 @@ void input(int order){//입력 함수
 				}
 				break;
 			}
-			if(num[order][i] == ' ' || num[order][i] == '\n')//엔터 혹은 스페이스로 숫자 입력을 일시로 종료시킴
+			if(num[order][i] == ' ' || num[order][i] == '\n')//��� �����
 				break;
 		}
 	}
-	else//연산자를 받게 하는 부분
-		scanf("%c ", &num[order][0]);
+	else//��� ��
+		scanf("%c ", &num[order]);
 }
 int main()
 {
 	printf("(input) ");
-	for(order = 0; order < 10; order++){
+	for(order = 0; order < 9; order++){
 		input(order);
+		if(order % 2 == 0)
+			comma(i, d, order);
 		if(d < 0 && num[order][i] == '\n'){
 			break;
 		}
@@ -50,29 +53,7 @@ int main()
 			break;
 		}
 	}
-	for(or = 1; or <= order; or += 2){//입력된 연산자가 무엇인지 확인함
-		switch(num[or][0]){
-			case '+':
-				addition(or);
-				break;
-			case '-':
-				subtraction(or);
-				break;
-			case '*':
-				multiple(or);
-				break;
-			case '/':
-				division(or);
-				break;
-			case '%':
-				remain(or);
-				break;
-			default :
-				break;
-		}
-	}
 	printf("= ");
-	comma(i, d, order);
 	return 0;
 
 }
