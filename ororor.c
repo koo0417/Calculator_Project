@@ -3,7 +3,7 @@
 char num[11][50], dec[11][9];
 int i, d = -1;
 int order = 0;
-int or;
+int ord;
 int r1, r2, r3 = 11;
 int sh, dh, k;
 void comma(int i, int d, int order){//¿¿ ¿¿ ¿¿
@@ -40,45 +40,47 @@ void input(int order){//¿¿ ¿¿
 	else//¿¿¿ ¿¿
 		scanf("%c ", &num[order][0]);
 }
-void addition(int or){
+void put_back(int ord){
 	for(r1 = 10; r1 >= 9; r1--){
 		for(int sh = 50; sh >= 0; sh--){
-			num[r1][sh] = num[or-1][k];
-			k++;
-		}
-		for(int dh = 10; dh >= 0; dh--){
-			dec[r1][dh] = dec[or-1][k];
+			num[r1][sh] = num[ord-1][k];
 			k++;
 		}
 		if(r1 == 10)
-			or += 2;
+			ord += 2;
+		if(r1 == 9)
+			ord -= 2;
 	}
-	for(sh = 50; sh >= 0; sh--){
-		num[r3][sh] = (num[10][sh] + num[9][sh]) % 10;
-		num[r3][sh-1] += (num[10][sh] + num[9][sh]) / 10;
-	}
-	for(dh = 10; dh >= 0; dh--){
-		dec[r3][dh] = (dec[or-1][dh] + dec[or+1][dh]) % 10;
-		if(dh = 10)
-			num[r3][49] += (dec[or-1][dh] + dec[or+1][dh]) / 10;
-		if(dh < 10)
-			dec[r3][dh-1] += (dec[or-1][dh] + dec[or+1][dh]) / 10;
-	}
-
-	or -= 2;
+}
+void put_again(int ord){
 	for(sh = 50; sh >= 0; sh--){
 		int i = 0;
-		num[or-1][i] = num[r3][sh];
-		num[or+1][i] = num[r3][sh];
+		num[ord-1][i] = num[r3][sh];
+		num[ord+1][i] = num[r3][sh];
 		i++;
 	}
 	for(dh = 10; dh >= 0; dh--){
 		int d = 0;
-		dec[or-1][d] = dec[r3][dh];
-		dec[or+1][d] = dec[r3][dh];
+		dec[ord-1][d] = dec[r3][dh];
+		dec[ord+1][d] = dec[r3][dh];
 		d++;
 	}
 }
+void addition(int ord){
+	if(num[10][50] == '.' && num[9][50] == '.')
+		num[r3][50] -= '.';
+	for(sh = 50; sh >= 0; sh--){
+		num[r3][sh] = (num[10][sh] + num[9][sh]) % 10;
+		num[r3][sh-1] += (num[10][sh] + num[9][sh]) / 10;
+	}
+	for(dh = 0; dh < 9; dh++){
+		dec[r3][dh] = (dec[ord-1][dh] + dec[ord+1][dh]) % 10;
+		if(dh == 0)
+			num[r3][49] += (dec[ord-1][0] + dec[ord+1][0]) / 10;
+		else
+			dec[r3][dh-1] += (dec[ord-1][dh] + dec[ord+1][dh]) / 10;
+	}
+}		
 int main()
 {
 	printf("(input) ");
@@ -91,18 +93,21 @@ int main()
 			break;
 		}
 	}
-	for(or = 1; or <= order; or += 2){
-		if(or > order)
-			break;//¿¿¿¿ ¿¿
-		switch(num[or][0]){
+	for(ord = 1; ord <= order; ord += 2){
+		if(ord > order)
+			break;
+		switch(num[ord][0]){
 			case '+':
-				addition(or);
+				put_back(ord);
+				addition(ord);
+				put_again(ord);
 				break;
 			default :
+				printf("ERROR\n");
 				break;
 		}
 	}
 	printf("= ");
-	comma(i, d, order);
+	comma(i, d, ord-1);
 	return 0;
 }
