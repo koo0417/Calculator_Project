@@ -6,6 +6,7 @@ int order = 0;
 int ord;
 int r1, r2, r3 = 11;
 int sh, dh, k;
+int int_place(int ord);
 void comma(int i, int d, int order){//真 真 真
 	int k, x;
 	for(k = 0; k <= 49; k++){//真 真 真  真
@@ -43,10 +44,11 @@ void input(int order){
 void put_back(int ord, int ip, int dp){
 	if(dp == 10){
 		for(r1 = 10; r1 >= 9; r1--){
-			k = 0;
-			for(int sh = 50 - ip; sh <= 50; sh++){
+			k = int_place(ord-1);
+			for(int sh = 50; sh >= 50 - ip; sh--){
 				num[r1][sh] = num[ord-1][k];
-				k++;
+				k--;
+				printf("2a%c 2b%c 2c%d 2d%d\n", num[r1][sh], num[ord-1][k], sh, ip);
 			}
 			if(r1 == 10)
 				ord += 2;
@@ -55,24 +57,27 @@ void put_back(int ord, int ip, int dp){
 		}}
 	else{
 		for(r1 = 10; r1 >= 9; r1--){
-			k = 0;
-			for(int sh = 50 - ip; sh <= 50; sh++){
+			k = int_place(ord-1);
+			for(int sh = 50; sh >= 50 - ip; sh--){
 				num[r1][sh] = num[ord-1][k];
-				k++;
+				k--;
+				printf("a%c b%c c%d d%d\n", num[r1][sh], num[ord-1][k], sh, ip);
 			}
 			k = 0;
-			for(int dh = 10 - dp; dh <= 10; dh++){
+			for(int dh = 10 - dp; dh < 10; dh++){
 				dec[r1][dh] = dec[ord-1][k];
 				k++;
 			}
 			if(r1 == 10)
 				ord += 2;
-			if(r1 == 9)
+			if(r1 == 9){
 				ord -= 2;
-		}}
+			}
+		}
+	}
 }
 int int_place(int ord){
-	int l = 0, p = 1;
+	int l = 0, p = 0;
 	while(p <= 49){
 		if(num[ord][l] == ' ' || num[ord][l] == '\n' || num[ord][l] == '.')
 			break;
@@ -93,38 +98,39 @@ int dec_place(int ord){
 }
 
 void put_again(int ord, int ip, int dp){
-	for(sh = 49; sh >= 0; sh--){
+	for(sh = 49; sh >= 49 - ip; sh--){
 		int i = 0;
-		num[ord-1][i] = num[r3][sh];
-		num[ord+1][i] = num[r3][sh];
+		num[ord-1][i] = num[r3][sh] + '0';
+		num[ord+1][i] = num[r3][sh] + '0';
+		printf("3a%c\n", num[r3][sh] + '0');
 		i++;
 	}
-	for(dh = 10; dh >= 0; dh--){
+	for(dh = 10 - dp; dh < 0; dh++){
 		int d = 0;
-		dec[ord-1][d] = dec[r3][dh];
-		dec[ord+1][d] = dec[r3][dh];
+		dec[ord-1][d] = dec[r3][dh] + '0';
+		dec[ord+1][d] = dec[r3][dh] + '0';
 		d++;
 	}
 }
 void addition(int ord, int ip, int dp){
-	for(sh = 49; sh >= 0; sh--){
-		num[r3][sh] = (num[10][sh] + num[9][sh]) % 10;
-		num[r3][sh-1] += (num[10][sh] + num[9][sh]) / 10;
+	for(sh = 49 ; sh > 49 - ip; sh--){
+		num[r3][sh] = (num[10][sh] + num[9][sh] - 2 * '0') % 10;
+		num[r3][sh-1] += (num[10][sh] + num[9][sh] - 2 * '0') / 10;
 	}
-	for(dh = 0; dh < 9; dh++){
-		dec[r3][dh] = (dec[ord-1][dh] + dec[ord+1][dh]) % 10;
+	for(dh = 10 - dp; dh < 10; dh++){
+		dec[r3][dh] = (dec[10][dh] + dec[9][dh] - 2 * '0') % 10;
 		if(dh == 0)
-			num[r3][49] += (dec[ord-1][0] + dec[ord+1][0]) / 10;
+			num[r3][49] += (dec[10][0] + dec[9][0] - 2 * '0') / 10;
 		else
-			dec[r3][dh-1] += (dec[ord-1][dh] + dec[ord+1][dh]) / 10;
+			dec[r3][dh-1] += (dec[10][dh] + dec[9][dh] - 2 * '0') / 10;
 	}
 }		
 int main()
 {
+	int a;
 	printf("(input) ");
 	for(order = 0; order < 9; order++){
 		input(order);
-			printf("%d %d\n", int_place(order), dec_place(order));
 		if(d < 0 && num[order][i] == '\n'){
 			break;
 		}
@@ -135,17 +141,19 @@ int main()
 	for(ord = 1; ord <= order; ord += 2){
 		if(ord > order)
 			break;
+		a = (int_place(ord-1)>int_place(ord+1)) ? int_place(ord-1) : int_place(ord+1);
 		switch(num[ord][0]){
 			case '+':
-				put_back(ord, int_place(ord-1), dec_place(ord-1));
-				addition(ord, int_place(ord-1), dec_place(ord-1));
-				put_again(ord, int_place(ord-1), dec_place(ord-1));
+				put_back(ord, a, dec_place(ord-1));
+				addition(ord, a, dec_place(ord-1));
+				put_again(ord, a, dec_place(ord-1));
+				printf("= ");
+				comma(ord - 1, a, dec_place(ord-1));
 				break;
 			default :
 				printf("ERROR\n");
 				break;
 		}
 	}
-	printf("= ");
 	return 0;
 }
